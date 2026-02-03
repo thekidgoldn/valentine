@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine Surprise ❤️</title>
+
+<!-- Confetti library -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle, #2b0000, #000);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: white;
+}
+
+/* PASSWORD SCREEN */
+#passwordScreen {
+  position: absolute;
+  inset: 0;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+#passwordScreen input, #passwordScreen button {
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  margin: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* MAIN CARD */
+.card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(255,0,0,0.4);
+}
+
+h1 { color: #ff4d6d; }
+
+button {
+  padding: 12px 25px;
+  font-size: 18px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+}
+
+#yes { background: #ff4d6d; color: white; position: relative; }
+#no  { background: #777; color: white; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
+
+#clickButton {
+  background: #b266ff; color: white;
+  display: none;
+}
+
+/* MESSAGE */
+#message {
+  display: none;
+  font-size: 20px;
+  color: #ffb3c6;
+  margin-top: 20px;
+}
+
+/* PHOTOS */
+#photosContainer {
+  display: none;
+  margin-top: 20px;
+  justify-content: center;
+  gap: 20px;
+}
+
+#photosContainer img {
+  width: 150px;      
+  height: auto;
+  border-radius: 15px;
+  animation: fade 2s forwards;
+}
+
+/* HEARTS */
+.heart {
+  position: absolute;
+  font-size: 24px;
+  color: #b266ff;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float { from { transform: translateY(0); opacity:1; } to { transform: translateY(-800px); opacity:0; } }
+
+/* GIFTS */
+.gift {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  animation: floatGift 6s linear infinite;
+  cursor: pointer;
+}
+
+@keyframes floatGift { from {transform: translateY(0) rotate(0deg); opacity:1;} to {transform: translateY(-800px) rotate(360deg); opacity:0;} }
+
+/* SURPRISE */
+#surprise img { border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.3); animation: fade 2s forwards; }
+#surprise h2 { color:#ffb3c6; margin-bottom:15px; }
+
+@keyframes fade { from{opacity:0;transform:scale(0.8);} to{opacity:1;transform:scale(1);} }
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD -->
+<div id="passwordScreen">
+  <h2>🔒 Enter the secret password ❤️</h2>
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="checkPassword()">Unlock 💖</button>
+  <p id="error" style="color:red; display:none;">Wrong password 😢</p>
+</div>
+
+<!-- MUSIC -->
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- MAIN CARD -->
+<div class="card">
+  <h1 id="title">Will you be my Valentine, <span id="name">My Love</span>? 💖</h1>
+  <button id="yes">Yes 😍</button>
+  <button id="no">No 🙈</button>
+
+  <div id="message"></div>
+
+  <div id="photosContainer">
+    <img id="photo1" src="nadia.JPG" alt="Photo 1">
+    <img id="photo2" src="sunday.JPG" alt="Photo 2">
+  </div>
+
+  <button id="clickButton">Click this 🙈</button>
+
+  <div id="surprise" style="display:none; text-align:center; margin-top:20px;">
+    <h2>Surprise! 🎁💐🧸</h2>
+    <img src="flower.JPG" alt="Flowers" style="width:150px; margin:10px;">
+    <img src="teddy.JPG" alt="Teddy Bear" style="width:150px; margin:10px;">
+  </div>
+</div>
+
+<script>
+/* === CUSTOMIZE === */
+document.getElementById("name").innerText = "Mrs sunday";
+const correctPassword = "ilovehabib";
+const letter = "You have no idea how much you mean to me , you are literally my everything and i love you very much ❤️";
+
+/* PASSWORD CHECK */
+function checkPassword() {
+  const input = document.getElementById("password").value;
+  if(input === correctPassword) document.getElementById("passwordScreen").style.display="none";
+  else document.getElementById("error").style.display="block";
+}
+
+/* BUTTONS */
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const clickBtn = document.getElementById("clickButton");
+const message = document.getElementById("message");
+const music = document.getElementById("music");
+const photosContainer = document.getElementById("photosContainer");
+
+/* NO button runs away */
+noBtn.addEventListener("mouseover", () => {
+  const padding = 50;
+  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
+
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
+});
+
+/* YES CLICK EVENT */
+yesBtn.addEventListener("click", () => {
+  yesBtn.style.display="none";
+  noBtn.style.display="none";
+
+  document.getElementById("title").innerText="You chose YES 🙈";
+
+  typeWriter();
+  photosContainer.style.display="flex"; // show both photos side by side
+  clickBtn.style.display="inline-block";
+});
+
+/* CLICK THIS BUTTON */
+clickBtn.addEventListener("click", () => {
+  clickBtn.style.display="none";
+  document.getElementById("surprise").style.display="block";
+
+  music.play();
+  launchConfetti();
+  launchHearts();
+  launchGifts();
+});
+
+/* TYPEWRITER */
+let i=0;
+function typeWriter(){
+  message.style.display="block";
+  if(i<letter.length){
+    message.innerHTML+=letter.charAt(i);
+    i++;
+    setTimeout(typeWriter,50);
+  }
+}
+
+/* CONFETTI */
+function launchConfetti(){
+  const end=Date.now()+3000;
+  (function frame(){
+    confetti({particleCount:8,spread:70,origin:{x:Math.random(),y:0.6}});
+    if(Date.now()<end) requestAnimationFrame(frame);
+  })();
+}
+
+/* HEARTS */
+function launchHearts(){
+  for(let i=0;i<120;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💜";
+    h.style.left=Math.random()*window.innerWidth+"px";
+    h.style.bottom="-20px";
+    h.style.fontSize=(Math.random()*20+20)+"px";
+    h.style.animationDuration=(Math.random()*3+4)+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),7000);
+  }
+}
+
+/* GIFTS */
+function launchGifts(){
+  const giftUrls=["https://i.imgur.com/1qfO2hR.png","https://i.imgur.com/AH6XjNq.png"];
+  for(let i=0;i<40;i++){
+    const gift=document.createElement("img");
+    gift.className="gift";
+    gift.src=giftUrls[Math.floor(Math.random()*giftUrls.length)];
+    gift.style.left=Math.random()*window.innerWidth+"px";
+    gift.style.bottom="-50px";
+    gift.style.width=(30+Math.random()*20)+"px";
+    gift.style.animationDuration=(Math.random()*3+4)+"s";
+    document.body.appendChild(gift);
+    setTimeout(()=>gift.remove(),7000);
+  }
+}
+</script>
+
+</body>
+</html>
+
